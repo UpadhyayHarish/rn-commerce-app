@@ -29,7 +29,7 @@ const HomeScreen = () => {
       <View style={styles.header}>
         <Text style={styles.headerText}>ShopMaxx</Text>
       </View>
-      <BannerCarousel />
+
       <SearchBar onSearch={debouncedSearch} />
       <Text style={styles.title}>{products.length} Products found</Text>
       <FlatList
@@ -43,6 +43,7 @@ const HomeScreen = () => {
         ListEmptyComponent={
           !loading ? <EmptyState message="No products found" /> : null
         }
+        ListHeaderComponent={<BannerCarousel />} // Add spacing at top of list
       />
       {loading && <Loader />}
     </View>
