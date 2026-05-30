@@ -2,11 +2,13 @@ import React, { useCallback, useMemo } from "react";
 import { View, StyleSheet, FlatList, Text } from "react-native";
 import { useProducts } from "../../hooks/useProducts";
 import SearchBar from "../../components/SearchBar/SearchBar";
+import BannerCarousel from "../../components/BannerCarousel";
 import ProductCard from "../../components/ProductCard/ProductCard";
 import Loader from "../../components/Loader/Loader";
 import EmptyState from "../../components/EmptyState/EmptyState";
 import { debounce } from "../../utils/debounce";
 import { DEBOUNCE_DELAY } from "../../utils/constants";
+import { Product } from "../../types/product";
 
 const HomeScreen = () => {
   const { products, loading, hasMore, onSearch, loadMore, refresh } =
@@ -18,12 +20,16 @@ const HomeScreen = () => {
   );
 
   const renderItem = useCallback(
-    ({ item }) => <ProductCard product={item} />,
+    ({ item }: { item: Product }) => <ProductCard product={item} />,
     [],
   );
 
   return (
     <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>ShopMaxx</Text>
+      </View>
+      <BannerCarousel />
       <SearchBar onSearch={debouncedSearch} />
       <Text style={styles.title}>{products.length} Products found</Text>
       <FlatList
@@ -46,14 +52,25 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
     paddingHorizontal: 12,
     paddingTop: 12,
+    backgroundColor: "hsl(204, 72%, 72%)",
   },
   title: {
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 12,
+  },
+  header: {
+    height: 60,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 12,
+  },
+  headerText: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "rgb(241, 102, 37)",
   },
 });
 
