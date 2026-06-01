@@ -19,12 +19,16 @@ const { width } = Dimensions.get("window");
 const BannerCarousel: React.FC = () => {
   const [index, setIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [animationDirection, setAnimationDirection] = useState<
+    "next" | "prev" | null
+  >(null);
   const translateX = useRef(new Animated.Value(0)).current;
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Animate next image sliding over current
   const animateToNext = (nextIdx: number) => {
     setIsAnimating(true);
+    setAnimationDirection("next");
     translateX.setValue(width);
     Animated.timing(translateX, {
       toValue: 0,
@@ -33,12 +37,14 @@ const BannerCarousel: React.FC = () => {
     }).start(() => {
       setIndex(nextIdx);
       setIsAnimating(false);
+      setAnimationDirection(null);
     });
   };
 
   // Animate to previous image
   const animateToPrev = (prevIdx: number) => {
     setIsAnimating(true);
+    setAnimationDirection("prev");
     translateX.setValue(-width);
     Animated.timing(translateX, {
       toValue: 0,
@@ -47,6 +53,7 @@ const BannerCarousel: React.FC = () => {
     }).start(() => {
       setIndex(prevIdx);
       setIsAnimating(false);
+      setAnimationDirection(null);
     });
   };
 
@@ -58,7 +65,7 @@ const BannerCarousel: React.FC = () => {
         animateToNext(next);
       }
     }, 3000);
-    return () => timerRef.current && clearInterval(timerRef.current);
+    return () => clearInterval(timerRef?.current);
   }, [index, isAnimating]);
 
   // PanResponder for swipe
@@ -83,7 +90,7 @@ const BannerCarousel: React.FC = () => {
   const nextIdx = (index + 1) % BANNERS.length;
   const prevIdx = (index - 1 + BANNERS.length) % BANNERS.length;
   const showIdx = isAnimating
-    ? translateX.__getValue() > 0
+    ? animationDirection === "next"
       ? nextIdx
       : prevIdx
     : index;

@@ -1,18 +1,25 @@
-import React, { useCallback, useMemo } from "react";
-import { View, StyleSheet, FlatList, Text } from "react-native";
+import React, { useCallback, useMemo, useState } from "react";
+import { View, StyleSheet, FlatList, Text, Pressable } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { useProducts } from "../../hooks/useProducts";
+import { useFilters } from "../../hooks/useFilters";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import BannerCarousel from "../../components/BannerCarousel";
 import ProductCard from "../../components/ProductCard/ProductCard";
 import Loader from "../../components/Loader/Loader";
 import EmptyState from "../../components/EmptyState/EmptyState";
+import FiltersModal from "../../components/Filters/FiltersModal";
+import FilterCountPill from "../../components/Filters/FilterCountPill";
 import { debounce } from "../../utils/debounce";
 import { DEBOUNCE_DELAY } from "../../utils/constants";
 import { Product } from "../../types/product";
+import { mockFilters } from "../../mock/filters";
 
 const HomeScreen = () => {
   const { products, loading, hasMore, onSearch, loadMore, refresh } =
     useProducts();
+  const { appliedFilters, updateFilters } = useFilters();
+  const [filtersVisible, setFiltersVisible] = useState(false);
 
   const uniqueProducts = useMemo(() => {
     const seen = new Set();
@@ -38,7 +45,18 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
-      <SearchBar onSearch={debouncedSearch} />
+      <View style={styles.headerRow}>
+        <View style={styles.searchBarContainer}>
+          <SearchBar onSearch={debouncedSearch} />
+        </View>
+
+        <Pressable
+          style={styles.filterButton}
+          onPress={() => setFiltersVisible(true)}
+        >
+          <Ionicons name="filter" size={24} color="#007AFF" />
+        </Pressable>
+      </View>
       <Text style={styles.title}>{uniqueProducts.length} Products found</Text>
       <FlatList
         data={uniqueProducts}
@@ -51,9 +69,24 @@ const HomeScreen = () => {
         ListEmptyComponent={
           !loading ? <EmptyState message="No products found" /> : null
         }
-        ListHeaderComponent={<BannerCarousel />} // Add spacing at top of list
+        ListHeaderComponent={<BannerCarousel />}
       />
       {loading && <Loader />}
+
+      {/* Filters Modal */}
+      <FiltersModal
+        visible={filtersVisible}
+        filters={mockFilters}
+        appliedFilters={appliedFilters}
+        onApply={updateFilters}
+        onClose={() => setFiltersVisible(false)}
+      />
+
+      {/* Filter Count Pill */}
+      <FilterCountPill
+        appliedFilters={appliedFilters}
+        onPress={() => setFiltersVisible(true)}
+      />
     </View>
   );
 };
@@ -64,6 +97,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingTop: 12,
     backgroundColor: "hsl(204, 42%, 88%)",
+  },
+  headerRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    marginBottom: 8,
+    justifyContent: "space-between",
+  },
+  filterButton: {
+    padding: 8,
+    justifyContent: "center",
+    alignItems: "center",
+    width: 40,
+  },
+  searchBarContainer: {
+    flex: 1,
   },
   title: {
     fontSize: 18,

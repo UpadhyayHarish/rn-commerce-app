@@ -62,7 +62,7 @@ const SearchBar: React.FC<SearchBarProps> = React.memo(({ onSearch }) => {
 
       <TextInput
         style={styles.input}
-        placeholder={`${placeholder}|`}
+        placeholder={`${placeholder} `}
         value={value}
         onChangeText={handleChange}
         autoCapitalize="none"
