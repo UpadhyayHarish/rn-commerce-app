@@ -1,13 +1,13 @@
-import type { Profile } from '../types/profile';
+import type { Profile } from "../types/profile";
 
 export const mockProfile: Profile = {
-	id: '1',
-	name: 'John Doe',
-	email: 'john.doe@example.com',
-	phone: '+1 234 567 890',
-	address: '123 Main St',
-	city: 'New York',
-	country: 'USA',
-	pincode: '10001',
-	photo: 'https://randomuser.me/api/portraits/men/1.jpg',
+  id: "1",
+  name: "Harish Upadhyay",
+  email: "hupadhyay619@gmail.com",
+  phone: "+91 7906412889",
+  address: "JP Nagar, Bangalore",
+  city: "Bangalore",
+  country: "India",
+  pincode: "560076",
+  photo: "https://randomuser.me/api/portraits/men/1.jpg",
 };

@@ -14,6 +14,18 @@ const HomeScreen = () => {
   const { products, loading, hasMore, onSearch, loadMore, refresh } =
     useProducts();
 
+  const uniqueProducts = useMemo(() => {
+    const seen = new Set();
+
+    return products.filter((item) => {
+      if (seen.has(item.id)) {
+        return false;
+      }
+
+      seen.add(item.id);
+      return true;
+    });
+  }, [products]);
   const debouncedSearch = useMemo(
     () => debounce(onSearch, DEBOUNCE_DELAY),
     [onSearch],
@@ -26,14 +38,10 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>ShopMaxx</Text>
-      </View>
-
       <SearchBar onSearch={debouncedSearch} />
-      <Text style={styles.title}>{products.length} Products found</Text>
+      <Text style={styles.title}>{uniqueProducts.length} Products found</Text>
       <FlatList
-        data={products}
+        data={uniqueProducts}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         onEndReached={hasMore ? loadMore : undefined}
@@ -55,7 +63,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 12,
     paddingTop: 12,
-    backgroundColor: "hsl(204, 72%, 72%)",
+    backgroundColor: "hsl(204, 42%, 88%)",
   },
   title: {
     fontSize: 18,

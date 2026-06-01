@@ -1,7 +1,7 @@
-import React from 'react';
-import { View, StyleSheet, Text, Image } from 'react-native';
-import { useProfile } from '../../hooks/useProfile';
-import Loader from '../../components/Loader/Loader';
+import React from "react";
+import { View, StyleSheet, Text, Image } from "react-native";
+import { useProfile } from "../../hooks/useProfile";
+import Loader from "../../components/Loader/Loader";
 
 const ProfileScreen = () => {
   const { profile, loading } = useProfile();
@@ -11,11 +11,15 @@ const ProfileScreen = () => {
   return (
     <View style={styles.container}>
       <Image source={{ uri: profile.photo }} style={styles.photo} />
-      <Text style={styles.name}>{profile.name}</Text>
-      <Text style={styles.info}>{profile.email}</Text>
-      <Text style={styles.info}>{profile.phone}</Text>
-      <Text style={styles.info}>{profile.address}</Text>
-      <Text style={styles.info}>{profile.city}, {profile.country} - {profile.pincode}</Text>
+      <View style={styles.infoContainer}>
+        <Text style={styles.name}>{profile.name}</Text>
+        <Text style={styles.info}>{profile.email}</Text>
+        <Text style={styles.info}>{profile.phone}</Text>
+        <Text style={styles.info}>{profile.address}</Text>
+        <Text style={styles.info}>
+          {profile.city}, {profile.country} - {profile.pincode}
+        </Text>
+      </View>
     </View>
   );
 };
@@ -23,10 +27,9 @@ const ProfileScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     padding: 16,
+    flexDirection: "row",
   },
   photo: {
     width: 100,
@@ -34,14 +37,18 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     marginBottom: 16,
   },
+  infoContainer: {
+    flex: 1,
+    marginLeft: 16,
+  },
   name: {
     fontSize: 22,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 8,
   },
   info: {
     fontSize: 16,
-    color: '#444',
+    color: "#444",
     marginBottom: 4,
   },
 });
